@@ -9,6 +9,7 @@ import { VehicleSelector } from '@/components/VehicleSelector';
 import { ExpensesTable } from '@/components/ExpensesTable';
 import { NewExpenseModal } from '@/components/NewExpenseModal';
 import { NewVehicleModal } from '@/components/NewVehicleModal';
+import { ManageFleetModal } from '@/components/ManageFleetModal';
 import { 
   Fuel, 
   Disc, 
@@ -29,6 +30,7 @@ export default function Home() {
   // Modals
   const [isExpenseModalOpen, setIsExpenseModalOpen] = useState<boolean>(false);
   const [isVehicleModalOpen, setIsVehicleModalOpen] = useState<boolean>(false);
+  const [isFleetModalOpen, setIsFleetModalOpen] = useState<boolean>(false);
 
   // Fetch initial data
   const fetchData = async () => {
@@ -156,6 +158,7 @@ export default function Home() {
       <Header
         onOpenExpenseModal={() => setIsExpenseModalOpen(true)}
         onOpenVehicleModal={() => setIsVehicleModalOpen(true)}
+        onOpenFleetModal={() => setIsFleetModalOpen(true)}
       />
 
       {/* Main Content Area */}
@@ -336,6 +339,19 @@ export default function Home() {
         isOpen={isVehicleModalOpen}
         onClose={() => setIsVehicleModalOpen(false)}
         onVehicleCreated={fetchData}
+      />
+
+      <ManageFleetModal
+        isOpen={isFleetModalOpen}
+        onClose={() => setIsFleetModalOpen(false)}
+        vehiculos={vehiculos}
+        gastos={gastos}
+        onFleetUpdated={fetchData}
+        onVehicleDeleted={(placa) => {
+          if (selectedPlaca === placa) {
+            setSelectedPlaca('');
+          }
+        }}
       />
 
     </div>

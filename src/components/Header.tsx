@@ -1,7 +1,7 @@
 'use client';
 
 import React from 'react';
-import { Truck, PlusCircle, Database, ShieldCheck } from 'lucide-react';
+import { Truck, PlusCircle, Database, ShieldCheck, SlidersHorizontal } from 'lucide-react';
 
 interface HeaderProps {
   onOpenExpenseModal: () => void;
@@ -42,6 +42,15 @@ export const Header: React.FC<HeaderProps> = ({
 
           {/* Quick Actions */}
           <div className="flex items-center gap-2.5">
+            {onOpenFleetModal && (
+              <button
+                onClick={onOpenFleetModal}
+                className="inline-flex items-center gap-2 px-3.5 py-2 text-xs font-semibold text-slate-200 bg-slate-800 hover:bg-slate-700 border border-slate-700 rounded-lg transition-colors shadow-sm"
+              >
+                <SlidersHorizontal className="w-4 h-4 text-amber-500" />
+                Gestionar Flota
+              </button>
+            )}
             <button
               onClick={onOpenVehicleModal}
               className="inline-flex items-center gap-2 px-3.5 py-2 text-xs font-semibold text-slate-200 bg-slate-800 hover:bg-slate-700 border border-slate-700 rounded-lg transition-colors shadow-sm"

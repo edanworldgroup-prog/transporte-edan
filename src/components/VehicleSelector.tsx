@@ -2,7 +2,7 @@
 
 import React from 'react';
 import { Vehiculo } from '@/types/database';
-import { Truck, Filter, CheckCircle2, AlertTriangle, XCircle, User } from 'lucide-react';
+import { Truck, Filter, CheckCircle2, AlertTriangle, XCircle, User, Archive } from 'lucide-react';
 
 interface VehicleSelectorProps {
   vehiculos: Vehiculo[];
@@ -51,6 +51,8 @@ export const VehicleSelector: React.FC<VehicleSelectorProps> = ({
 
           {vehiculos.map((v) => {
             const isSelected = selectedPlaca === v.placa;
+            const isDesincorporado = v.estado === 'desincorporado';
+
             return (
               <button
                 key={v.id}
@@ -58,12 +60,18 @@ export const VehicleSelector: React.FC<VehicleSelectorProps> = ({
                 className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold transition-all border ${
                   isSelected
                     ? 'bg-amber-500 text-slate-950 border-amber-500 shadow-sm'
+                    : isDesincorporado
+                    ? 'bg-slate-950/60 text-slate-500 border-slate-800 hover:border-slate-700'
                     : 'bg-slate-800/80 text-slate-300 border-slate-700 hover:bg-slate-800'
                 }`}
               >
-                <Truck className="w-3.5 h-3.5" />
-                <span className="font-mono font-bold">{v.placa}</span>
-                <span className="text-[10px] opacity-75">({v.marca})</span>
+                <Truck className={`w-3.5 h-3.5 ${isDesincorporado ? 'opacity-50' : ''}`} />
+                <span className={`font-mono font-bold ${isDesincorporado ? 'line-through text-slate-500' : ''}`}>
+                  {v.placa}
+                </span>
+                <span className="text-[10px] opacity-75">
+                  ({isDesincorporado ? 'Desinc.' : v.marca})
+                </span>
               </button>
             );
           })}
@@ -96,11 +104,14 @@ export const VehicleSelector: React.FC<VehicleSelectorProps> = ({
                   ? 'bg-emerald-500/10 border-emerald-500/20 text-emerald-400'
                   : currentVehiculo.estado === 'mantenimiento'
                   ? 'bg-amber-500/10 border-amber-500/20 text-amber-400'
+                  : currentVehiculo.estado === 'desincorporado'
+                  ? 'bg-slate-700/30 border-slate-600 text-slate-400'
                   : 'bg-red-500/10 border-red-500/20 text-red-400'
               }`}
             >
               {currentVehiculo.estado === 'activo' && <CheckCircle2 className="w-3 h-3" />}
               {currentVehiculo.estado === 'mantenimiento' && <AlertTriangle className="w-3 h-3" />}
+              {currentVehiculo.estado === 'desincorporado' && <Archive className="w-3 h-3" />}
               {currentVehiculo.estado === 'inactivo' && <XCircle className="w-3 h-3" />}
               {currentVehiculo.estado.toUpperCase()}
             </span>

@@ -289,8 +289,12 @@ export const NewExpenseModal: React.FC<NewExpenseModalProps> = ({
               >
                 <option value="">Selecciona una placa...</option>
                 {vehiculos.map((v) => (
-                  <option key={v.id} value={v.id}>
-                    {v.placa} — {v.marca} {v.modelo}
+                  <option
+                    key={v.id}
+                    value={v.id}
+                    disabled={v.estado === 'desincorporado'}
+                  >
+                    {v.placa} — {v.marca} {v.modelo} {v.estado === 'desincorporado' ? '⛔ (Desincorporado)' : ''}
                   </option>
                 ))}
               </select>

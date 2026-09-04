@@ -13,7 +13,7 @@ export interface Vehiculo {
   anio?: number;
   chofer_habitual?: string;
   kilometraje_actual: number;
-  estado: 'activo' | 'mantenimiento' | 'inactivo';
+  estado: 'activo' | 'mantenimiento' | 'inactivo' | 'desincorporado';
   created_at: string;
 }
 
