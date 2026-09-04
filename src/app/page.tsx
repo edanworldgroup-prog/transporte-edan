@@ -10,6 +10,7 @@ import { ExpensesTable } from '@/components/ExpensesTable';
 import { NewExpenseModal } from '@/components/NewExpenseModal';
 import { NewVehicleModal } from '@/components/NewVehicleModal';
 import { ManageFleetModal } from '@/components/ManageFleetModal';
+import { EditVehicleModal } from '@/components/EditVehicleModal';
 import { 
   Fuel, 
   Disc, 
@@ -31,6 +32,7 @@ export default function Home() {
   const [isExpenseModalOpen, setIsExpenseModalOpen] = useState<boolean>(false);
   const [isVehicleModalOpen, setIsVehicleModalOpen] = useState<boolean>(false);
   const [isFleetModalOpen, setIsFleetModalOpen] = useState<boolean>(false);
+  const [editingVehiculo, setEditingVehiculo] = useState<Vehiculo | null>(null);
 
   // Fetch initial data
   const fetchData = async () => {
@@ -169,6 +171,7 @@ export default function Home() {
           vehiculos={vehiculos}
           selectedPlaca={selectedPlaca}
           onSelectPlaca={setSelectedPlaca}
+          onEditVehicle={(v) => setEditingVehiculo(v)}
         />
 
         {/* Refresh & Title Row */}
@@ -351,6 +354,22 @@ export default function Home() {
           if (selectedPlaca === placa) {
             setSelectedPlaca('');
           }
+        }}
+        onEditVehicle={(vehiculo) => {
+          setIsFleetModalOpen(false);
+          setEditingVehiculo(vehiculo);
+        }}
+      />
+
+      <EditVehicleModal
+        isOpen={!!editingVehiculo}
+        onClose={() => setEditingVehiculo(null)}
+        vehiculo={editingVehiculo}
+        onVehicleUpdated={async (newPlaca) => {
+          if (selectedPlaca === editingVehiculo?.placa) {
+            setSelectedPlaca(newPlaca);
+          }
+          await fetchData();
         }}
       />
 

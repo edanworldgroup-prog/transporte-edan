@@ -14,7 +14,8 @@ import {
   User, 
   Gauge, 
   DollarSign, 
-  Loader2 
+  Loader2,
+  Edit3 
 } from 'lucide-react';
 import { Vehiculo, Gasto } from '@/types/database';
 import { supabase } from '@/lib/supabase';
@@ -26,6 +27,7 @@ interface ManageFleetModalProps {
   gastos: Gasto[];
   onFleetUpdated: () => Promise<void>;
   onVehicleDeleted?: (placa: string) => void;
+  onEditVehicle?: (vehiculo: Vehiculo) => void;
 }
 
 export const ManageFleetModal: React.FC<ManageFleetModalProps> = ({
@@ -35,6 +37,7 @@ export const ManageFleetModal: React.FC<ManageFleetModalProps> = ({
   gastos,
   onFleetUpdated,
   onVehicleDeleted,
+  onEditVehicle,
 }) => {
   const [busqueda, setBusqueda] = useState('');
   const [filtroEstado, setFiltroEstado] = useState<string>('todos');
@@ -326,6 +329,18 @@ export const ManageFleetModal: React.FC<ManageFleetModalProps> = ({
                             )}
                             {isDesincorporado ? 'Incorporar' : 'Desincorporar'}
                           </button>
+
+                          {/* Edit Vehicle Details & Plate */}
+                          {onEditVehicle && (
+                            <button
+                              onClick={() => onEditVehicle(vehiculo)}
+                              disabled={isOperating}
+                              className="p-1.5 rounded-lg text-slate-400 hover:text-amber-400 hover:bg-amber-500/10 border border-transparent hover:border-amber-500/20 transition-all"
+                              title="Editar placa o datos técnicos del vehículo"
+                            >
+                              <Edit3 className="w-4 h-4" />
+                            </button>
+                          )}
 
                           {/* Delete Definitively */}
                           <button

@@ -2,18 +2,20 @@
 
 import React from 'react';
 import { Vehiculo } from '@/types/database';
-import { Truck, Filter, CheckCircle2, AlertTriangle, XCircle, User, Archive } from 'lucide-react';
+import { Truck, Filter, CheckCircle2, AlertTriangle, XCircle, User, Archive, Edit3 } from 'lucide-react';
 
 interface VehicleSelectorProps {
   vehiculos: Vehiculo[];
   selectedPlaca: string;
   onSelectPlaca: (placa: string) => void;
+  onEditVehicle?: (vehiculo: Vehiculo) => void;
 }
 
 export const VehicleSelector: React.FC<VehicleSelectorProps> = ({
   vehiculos,
   selectedPlaca,
   onSelectPlaca,
+  onEditVehicle,
 }) => {
   const currentVehiculo = vehiculos.find((v) => v.placa === selectedPlaca);
 
@@ -115,6 +117,17 @@ export const VehicleSelector: React.FC<VehicleSelectorProps> = ({
               {currentVehiculo.estado === 'inactivo' && <XCircle className="w-3 h-3" />}
               {currentVehiculo.estado.toUpperCase()}
             </span>
+
+            {onEditVehicle && (
+              <button
+                onClick={() => onEditVehicle(currentVehiculo)}
+                className="inline-flex items-center gap-1.5 px-2.5 py-1 text-xs font-semibold text-amber-400 bg-amber-500/10 hover:bg-amber-500/20 border border-amber-500/30 rounded-lg transition-colors ml-1"
+                title="Editar datos o cambiar placa de este vehículo"
+              >
+                <Edit3 className="w-3.5 h-3.5" />
+                <span>Editar Placa</span>
+              </button>
+            )}
           </div>
         </div>
       )}
