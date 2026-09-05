@@ -81,3 +81,41 @@ export interface ResumenCostos {
   gastosCount: number;
   vehiculosCount: number;
 }
+
+export interface Viaje {
+  id: string;
+  vehiculo_id: string;
+  codigo_viaje?: string;
+  cliente: string;
+  origen: string;
+  destino: string;
+  fecha_salida: string;
+  fecha_llegada?: string;
+  ingreso_flete: number;
+  estado: 'completado' | 'en_ruta' | 'cancelado';
+  observaciones?: string;
+  created_at: string;
+  // Joins
+  vehiculo?: Vehiculo;
+}
+
+export interface BalanceMensual {
+  mesStr: string; // "YYYY-MM"
+  mesLabel: string; // "Septiembre 2026"
+  totalIngresos: number;
+  totalEgresos: number;
+  utilidadNeta: number;
+  margenPorcentaje: number;
+  fletesCount: number;
+  gastosCount: number;
+}
+
+export interface RentabilidadVehiculo {
+  vehiculo: Vehiculo;
+  fletesCount: number;
+  ingresos: number;
+  egresos: number;
+  utilidadNeta: number;
+  margenPorcentaje: number;
+}
+

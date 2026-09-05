@@ -1,17 +1,19 @@
 'use client';
 
 import React from 'react';
-import { Truck, PlusCircle, Database, ShieldCheck, SlidersHorizontal } from 'lucide-react';
+import { Truck, PlusCircle, Database, ShieldCheck, SlidersHorizontal, Navigation } from 'lucide-react';
 
 interface HeaderProps {
   onOpenExpenseModal: () => void;
   onOpenVehicleModal: () => void;
+  onOpenTripModal?: () => void;
   onOpenFleetModal?: () => void;
 }
 
 export const Header: React.FC<HeaderProps> = ({
   onOpenExpenseModal,
   onOpenVehicleModal,
+  onOpenTripModal,
   onOpenFleetModal,
 }) => {
   return (
@@ -58,9 +60,18 @@ export const Header: React.FC<HeaderProps> = ({
               <Truck className="w-4 h-4 text-slate-400" />
               + Vehículo
             </button>
+            {onOpenTripModal && (
+              <button
+                onClick={onOpenTripModal}
+                className="inline-flex items-center gap-2 px-3.5 py-2 text-xs font-bold text-slate-950 bg-emerald-400 hover:bg-emerald-300 rounded-lg transition-colors shadow-md shadow-emerald-500/10"
+              >
+                <Navigation className="w-3.5 h-3.5" />
+                + Registrar Viaje
+              </button>
+            )}
             <button
               onClick={onOpenExpenseModal}
-              className="inline-flex items-center gap-2 px-4 py-2 text-xs font-bold text-slate-950 bg-amber-500 hover:bg-amber-400 rounded-lg transition-colors shadow-md shadow-amber-500/10"
+              className="inline-flex items-center gap-2 px-3.5 py-2 text-xs font-bold text-slate-950 bg-amber-500 hover:bg-amber-400 rounded-lg transition-colors shadow-md shadow-amber-500/10"
             >
               <PlusCircle className="w-4 h-4" />
               Registrar Gasto
