@@ -20,6 +20,7 @@ interface NewExpenseModalProps {
   vehiculos: Vehiculo[];
   defaultPlaca?: string;
   onExpenseCreated: () => Promise<void>;
+  empresaId?: string;
 }
 
 export const NewExpenseModal: React.FC<NewExpenseModalProps> = ({
@@ -28,6 +29,7 @@ export const NewExpenseModal: React.FC<NewExpenseModalProps> = ({
   vehiculos,
   defaultPlaca,
   onExpenseCreated,
+  empresaId,
 }) => {
   const [categoria, setCategoria] = useState<CategoriaGasto>('combustible');
   const [vehiculoId, setVehiculoId] = useState<string>(
@@ -140,6 +142,7 @@ export const NewExpenseModal: React.FC<NewExpenseModalProps> = ({
         comprobante_numero: comprobanteNumero.trim() || null,
         observaciones: observaciones.trim() || null,
         detalles,
+        empresa_id: empresaId || null,
       });
 
       if (error) throw error;

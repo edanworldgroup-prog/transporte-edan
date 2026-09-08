@@ -11,6 +11,7 @@ interface NewTripModalProps {
   vehiculos: Vehiculo[];
   defaultPlaca?: string;
   onTripCreated: () => Promise<void>;
+  empresaId?: string;
 }
 
 export const NewTripModal: React.FC<NewTripModalProps> = ({
@@ -19,6 +20,7 @@ export const NewTripModal: React.FC<NewTripModalProps> = ({
   vehiculos,
   defaultPlaca,
   onTripCreated,
+  empresaId,
 }) => {
   const [vehiculoId, setVehiculoId] = useState<string>(
     vehiculos.find((v) => v.placa === defaultPlaca)?.id || (vehiculos[0]?.id ?? '')
@@ -70,6 +72,7 @@ export const NewTripModal: React.FC<NewTripModalProps> = ({
         codigo_viaje: codigoViaje.trim() || null,
         estado,
         observaciones: observaciones.trim() || null,
+        empresa_id: empresaId || null,
       });
 
       if (error) throw error;

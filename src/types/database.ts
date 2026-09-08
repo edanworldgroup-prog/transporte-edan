@@ -5,8 +5,31 @@ export type CategoriaGasto =
   | 'aceite_lubricante' 
   | 'mecanica';
 
+export interface Empresa {
+  id: string;
+  nombre: string;
+  rif_ruc?: string;
+  estado_licencia: 'activo' | 'suspendido' | 'vencido';
+  fecha_vencimiento: string;
+  limite_vehiculos: number;
+  created_at: string;
+  vehiculos_count?: number;
+  admin_email?: string;
+}
+
+export interface UsuarioPerfil {
+  id: string;
+  user_id: string;
+  empresa_id: string;
+  rol: 'superadmin' | 'admin_empresa' | 'operador';
+  nombre?: string;
+  email?: string;
+  empresa?: Empresa;
+}
+
 export interface Vehiculo {
   id: string;
+  empresa_id?: string;
   placa: string;
   marca: string;
   modelo: string;

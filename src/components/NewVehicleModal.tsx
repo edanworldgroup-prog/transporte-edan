@@ -8,12 +8,18 @@ interface NewVehicleModalProps {
   isOpen: boolean;
   onClose: () => void;
   onVehicleCreated: () => Promise<void>;
+  empresaId?: string;
+  limiteVehiculos?: number;
+  totalVehiculosActuales?: number;
 }
 
 export const NewVehicleModal: React.FC<NewVehicleModalProps> = ({
   isOpen,
   onClose,
   onVehicleCreated,
+  empresaId,
+  limiteVehiculos,
+  totalVehiculosActuales = 0,
 }) => {
   const [placa, setPlaca] = useState('');
   const [marca, setMarca] = useState('');
@@ -25,9 +31,16 @@ export const NewVehicleModal: React.FC<NewVehicleModalProps> = ({
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [errorMsg, setErrorMsg] = useState('');
 
+  const haAlcanzadoLimite = limiteVehiculos ? totalVehiculosActuales >= limiteVehiculos : false;
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setErrorMsg('');
+
+    if (haAlcanzadoLimite) {
+      setErrorMsg(`Has alcanzado el límite máximo de ${limiteVehiculos} vehículos permitidos por tu suscripción.`);
+      return;
+    }
 
     if (!placa.trim() || !marca.trim() || !modelo.trim()) {
       setErrorMsg('Por favor completa los campos obligatorios (Placa, Marca y Modelo).');
@@ -45,11 +58,12 @@ export const NewVehicleModal: React.FC<NewVehicleModalProps> = ({
         chofer_habitual: choferHabitual.trim() || null,
         kilometraje_actual: kilometrajeActual ? parseFloat(kilometrajeActual) : 0,
         estado,
+        empresa_id: empresaId || null,
       });
 
       if (error) {
         if (error.code === '23505') {
-          throw new Error(`La placa ${placa.toUpperCase()} ya se encuentra registrada.`);
+          throw new Error(`La placa ${placa.toUpperCase()} ya se encuentra registrada en esta empresa.`);
         }
         throw error;
       }
@@ -97,6 +111,13 @@ export const NewVehicleModal: React.FC<NewVehicleModalProps> = ({
         </div>
 
         <form onSubmit={handleSubmit} className="p-6 space-y-4">
+          {haAlcanzadoLimite && (
+            <div className="p-3.5 bg-amber-500/10 border border-amber-500/30 rounded-xl text-xs text-amber-300 flex items-start gap-2">
+              <span className="font-bold">⚠️ Límite de flota alcanzado:</span>
+              <span>Has alcanzado el límite de {limiteVehiculos} vehículos incluidos en tu plan de suscripción actual.</span>
+            </div>
+          )}
+
           {errorMsg && (
             <div className="p-3 bg-red-500/10 border border-red-500/20 text-red-400 text-xs rounded-lg">
               {errorMsg}
