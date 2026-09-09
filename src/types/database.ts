@@ -15,6 +15,8 @@ export interface Empresa {
   created_at: string;
   vehiculos_count?: number;
   admin_email?: string;
+  auth_user_id?: string;
+  usuario_nombre?: string;
 }
 
 export interface UsuarioPerfil {

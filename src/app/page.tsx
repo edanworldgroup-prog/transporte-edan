@@ -28,6 +28,7 @@ import { ManageFleetModal } from '@/components/ManageFleetModal';
 import { EditVehicleModal } from '@/components/EditVehicleModal';
 import { LoginScreen } from '@/components/LoginScreen';
 import { SuperAdminModal } from '@/components/SuperAdminModal';
+import { ResetPasswordModal } from '@/components/ResetPasswordModal';
 import { 
   Fuel, 
   Disc, 
@@ -61,6 +62,7 @@ export default function Home() {
   const [allEmpresas, setAllEmpresas] = useState<Empresa[]>([]);
   const [isAuthChecking, setIsAuthChecking] = useState<boolean>(true);
   const [isSuperAdminModalOpen, setIsSuperAdminModalOpen] = useState<boolean>(false);
+  const [isResetPasswordOpen, setIsResetPasswordOpen] = useState<boolean>(false);
 
   // Operational Data State
   const [vehiculos, setVehiculos] = useState<Vehiculo[]>([]);
@@ -183,6 +185,11 @@ export default function Home() {
   };
 
   useEffect(() => {
+    // Check if user opened the page from a password reset email link
+    if (typeof window !== 'undefined' && window.location.hash.includes('type=recovery')) {
+      setIsResetPasswordOpen(true);
+    }
+
     // 1. Initial check
     supabase.auth.getSession().then(({ data: { session } }) => {
       setSession(session);
@@ -197,7 +204,11 @@ export default function Home() {
     // 2. Auth State Listener
     const {
       data: { subscription },
-    } = supabase.auth.onAuthStateChange((_event, session) => {
+    } = supabase.auth.onAuthStateChange((event, session) => {
+      if (event === 'PASSWORD_RECOVERY') {
+        setIsResetPasswordOpen(true);
+      }
+
       setSession(session);
       if (session) {
         initSessionData(session);
@@ -468,14 +479,33 @@ export default function Home() {
   // 2. Unauthenticated: Render SaaS Login Screen
   if (!session) {
     return (
-      <LoginScreen
-        onLoginSuccess={async () => {
-          const { data: { session: s } } = await supabase.auth.getSession();
-          if (s) {
-            await initSessionData(s);
-          }
-        }}
-      />
+      <>
+        <LoginScreen
+          onLoginSuccess={async () => {
+            const { data: { session: s } } = await supabase.auth.getSession();
+            if (s) {
+              await initSessionData(s);
+            }
+          }}
+        />
+        <ResetPasswordModal
+          isOpen={isResetPasswordOpen}
+          onClose={() => {
+            setIsResetPasswordOpen(false);
+            if (typeof window !== 'undefined') {
+              window.history.replaceState(null, '', window.location.pathname);
+            }
+          }}
+          onPasswordResetSuccess={async () => {
+            setIsResetPasswordOpen(false);
+            if (typeof window !== 'undefined') {
+              window.history.replaceState(null, '', window.location.pathname);
+            }
+            const { data: { session: s } } = await supabase.auth.getSession();
+            if (s) await initSessionData(s);
+          }}
+        />
+      </>
     );
   }
 
@@ -790,6 +820,25 @@ export default function Home() {
           onEmpresasUpdated={handleEmpresasUpdated}
         />
       )}
+
+      {/* Reset Password Modal (when triggered via email link) */}
+      <ResetPasswordModal
+        isOpen={isResetPasswordOpen}
+        onClose={() => {
+          setIsResetPasswordOpen(false);
+          if (typeof window !== 'undefined') {
+            window.history.replaceState(null, '', window.location.pathname);
+          }
+        }}
+        onPasswordResetSuccess={async () => {
+          setIsResetPasswordOpen(false);
+          if (typeof window !== 'undefined') {
+            window.history.replaceState(null, '', window.location.pathname);
+          }
+          const { data: { session: s } } = await supabase.auth.getSession();
+          if (s) await initSessionData(s);
+        }}
+      />
 
     </div>
   );
