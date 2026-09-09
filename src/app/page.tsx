@@ -227,6 +227,13 @@ export default function Home() {
     };
   }, []);
 
+  // Update browser tab title to current transport company name
+  useEffect(() => {
+    if (activeEmpresa?.nombre && typeof document !== 'undefined') {
+      document.title = `${activeEmpresa.nombre} | Control de Flota y Costos`;
+    }
+  }, [activeEmpresa]);
+
   // SuperAdmin: switch company view
   const handleSelectEmpresa = async (newEmpresaId: string) => {
     const found = allEmpresas.find((e) => e.id === newEmpresaId);
@@ -752,7 +759,7 @@ export default function Home() {
 
       {/* Footer */}
       <footer className="border-t border-slate-900 bg-slate-950 py-4 text-center text-xs text-slate-500">
-        Transporte Edan © {new Date().getFullYear()} • Plataforma SaaS de Control de Carga Pesada & Balances
+        {activeEmpresa.nombre} © {new Date().getFullYear()} • Plataforma de Control de Carga Pesada & Balances
       </footer>
 
       {/* Modals */}

@@ -99,7 +99,7 @@ export const NewVehicleModal: React.FC<NewVehicleModalProps> = ({
               Registrar Nuevo Vehículo
             </h3>
             <p className="text-xs text-slate-400">
-              Añade un camión o chasis a la base de datos de Transporte Edan
+              Añade un camión o chasis a la base de datos de tu flota operativa
             </p>
           </div>
           <button

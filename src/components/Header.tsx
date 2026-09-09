@@ -44,6 +44,18 @@ export const Header: React.FC<HeaderProps> = ({
   selectedEmpresaId,
   onSelectEmpresaId,
 }) => {
+  // Dynamic brand title matching user's custom company name
+  const cleanEmpresaName = React.useMemo(() => {
+    if (!empresaNombre) return 'EDAN';
+    let name = empresaNombre.replace(/\s*\(Principal\)/i, '').trim();
+    if (name.toLowerCase().startsWith('transporte ')) {
+      name = name.slice(11).trim();
+    } else if (name.toLowerCase().startsWith('transportes ')) {
+      name = name.slice(12).trim();
+    }
+    return name.toUpperCase() || 'EDAN';
+  }, [empresaNombre]);
+
   const isSuperAdmin = userRol === 'superadmin';
 
   return (
@@ -58,17 +70,9 @@ export const Header: React.FC<HeaderProps> = ({
             </div>
             <div>
               <div className="flex flex-wrap items-center gap-2">
-                <h1 className="text-xl font-black tracking-tight text-white">
-                  TRANSPORTE <span className="text-amber-500">EDAN</span>
+                <h1 className="text-xl font-black tracking-tight text-white uppercase flex items-center gap-1.5">
+                  TRANSPORTE <span className="text-amber-500">{cleanEmpresaName}</span>
                 </h1>
-
-                {/* Company Tag */}
-                <div className="flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-medium bg-slate-800 border border-slate-700 text-slate-200">
-                  <Building2 className="w-3.5 h-3.5 text-amber-400" />
-                  <span className="font-semibold text-amber-300 max-w-[170px] truncate">
-                    {empresaNombre}
-                  </span>
-                </div>
 
                 {/* SuperAdmin Switcher if multiple companies exist */}
                 {isSuperAdmin && empresas.length > 1 && onSelectEmpresaId && (
