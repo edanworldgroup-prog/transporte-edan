@@ -29,24 +29,26 @@ import { EditVehicleModal } from '@/components/EditVehicleModal';
 import { LoginScreen } from '@/components/LoginScreen';
 import { SuperAdminModal } from '@/components/SuperAdminModal';
 import { ResetPasswordModal } from '@/components/ResetPasswordModal';
+import { NprFreightCalculator } from '@/components/NprFreightCalculator';
 import { 
   Fuel, 
   Disc, 
   UserCheck, 
   Wrench, 
   Droplet, 
-  RefreshCw,
-  PieChart,
-  Truck,
-  TrendingUp,
-  Receipt,
-  Navigation,
-  Loader2,
-  ShieldAlert,
-  AlertTriangle,
-  LogOut,
-  Building2,
-  Lock
+  RefreshCw, 
+  PieChart, 
+  Truck, 
+  TrendingUp, 
+  Receipt, 
+  Navigation, 
+  Loader2, 
+  ShieldAlert, 
+  AlertTriangle, 
+  LogOut, 
+  Building2, 
+  Lock,
+  Calculator
 } from 'lucide-react';
 
 const MESES = [
@@ -82,8 +84,9 @@ export default function Home() {
   const [selectedMonth, setSelectedMonth] = useState<string>(getCurrentYearMonth());
   const [isAllTime, setIsAllTime] = useState<boolean>(false);
 
-  // Navigation tab state: 'balance' | 'viajes' | 'gastos'
-  const [activeTab, setActiveTab] = useState<'balance' | 'viajes' | 'gastos'>('balance');
+  // Navigation tab state: 'balance' | 'viajes' | 'gastos' | 'calculadora'
+  const [activeTab, setActiveTab] = useState<'balance' | 'viajes' | 'gastos' | 'calculadora'>('balance');
+  const [prefilledTripData, setPrefilledTripData] = useState<any>(null);
 
   // Modals
   const [isExpenseModalOpen, setIsExpenseModalOpen] = useState<boolean>(false);
@@ -607,6 +610,7 @@ export default function Home() {
         onOpenTripModal={() => setIsTripModalOpen(true)}
         onOpenVehicleModal={() => setIsVehicleModalOpen(true)}
         onOpenFleetModal={() => setIsFleetModalOpen(true)}
+        onOpenCalculator={() => setActiveTab('calculadora')}
         empresaNombre={activeEmpresa.nombre}
         userEmail={session.user.email}
         userRol={usuarioPerfil.rol}
@@ -671,6 +675,17 @@ export default function Home() {
             >
               <Receipt className="w-4 h-4" />
               Gastos Operativos ({filteredGastos.length})
+            </button>
+            <button
+              onClick={() => setActiveTab('calculadora')}
+              className={`inline-flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-bold transition-all ${
+                activeTab === 'calculadora'
+                  ? 'bg-amber-500 text-slate-950 shadow-lg shadow-amber-500/20'
+                  : 'bg-slate-900 text-slate-400 hover:text-slate-200 border border-slate-800'
+              }`}
+            >
+              <Calculator className="w-4 h-4" />
+              Calculadora Flete NPR
             </button>
           </div>
 
@@ -755,6 +770,17 @@ export default function Home() {
           </div>
         )}
 
+        {/* TAB 4: CALCULADORA Y COTIZADOR NPR */}
+        {activeTab === 'calculadora' && (
+          <NprFreightCalculator
+            vehiculos={vehiculos}
+            onOpenTripModalWithData={(data) => {
+              setPrefilledTripData(data);
+              setIsTripModalOpen(true);
+            }}
+          />
+        )}
+
       </main>
 
       {/* Footer */}
@@ -765,11 +791,15 @@ export default function Home() {
       {/* Modals */}
       <NewTripModal
         isOpen={isTripModalOpen}
-        onClose={() => setIsTripModalOpen(false)}
+        onClose={() => {
+          setIsTripModalOpen(false);
+          setPrefilledTripData(null);
+        }}
         vehiculos={vehiculos}
         defaultPlaca={selectedPlaca}
         onTripCreated={() => fetchData()}
         empresaId={activeEmpresa.id}
+        initialData={prefilledTripData}
       />
 
       <NewExpenseModal

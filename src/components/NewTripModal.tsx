@@ -12,6 +12,14 @@ interface NewTripModalProps {
   defaultPlaca?: string;
   onTripCreated: () => Promise<void>;
   empresaId?: string;
+  initialData?: {
+    vehiculoId?: string;
+    cliente?: string;
+    origen?: string;
+    destino?: string;
+    ingresoFlete?: number;
+    observaciones?: string;
+  };
 }
 
 export const NewTripModal: React.FC<NewTripModalProps> = ({
@@ -21,21 +29,37 @@ export const NewTripModal: React.FC<NewTripModalProps> = ({
   defaultPlaca,
   onTripCreated,
   empresaId,
+  initialData,
 }) => {
   const [vehiculoId, setVehiculoId] = useState<string>(
-    vehiculos.find((v) => v.placa === defaultPlaca)?.id || (vehiculos[0]?.id ?? '')
+    initialData?.vehiculoId ||
+    vehiculos.find((v) => v.placa === defaultPlaca)?.id || 
+    (vehiculos[0]?.id ?? '')
   );
-  const [cliente, setCliente] = useState<string>('');
-  const [origen, setOrigen] = useState<string>('');
-  const [destino, setDestino] = useState<string>('');
-  const [ingresoFlete, setIngresoFlete] = useState<string>('');
+  const [cliente, setCliente] = useState<string>(initialData?.cliente || '');
+  const [origen, setOrigen] = useState<string>(initialData?.origen || '');
+  const [destino, setDestino] = useState<string>(initialData?.destino || '');
+  const [ingresoFlete, setIngresoFlete] = useState<string>(
+    initialData?.ingresoFlete ? initialData.ingresoFlete.toString() : ''
+  );
   const [fechaSalida, setFechaSalida] = useState<string>(new Date().toISOString().split('T')[0]);
   const [fechaLlegada, setFechaLlegada] = useState<string>('');
   const [codigoViaje, setCodigoViaje] = useState<string>('');
   const [estado, setEstado] = useState<'completado' | 'en_ruta'>('completado');
-  const [observaciones, setObservaciones] = useState<string>('');
+  const [observaciones, setObservaciones] = useState<string>(initialData?.observaciones || '');
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
   const [errorMsg, setErrorMsg] = useState<string>('');
+
+  React.useEffect(() => {
+    if (isOpen && initialData) {
+      if (initialData.vehiculoId) setVehiculoId(initialData.vehiculoId);
+      if (initialData.cliente) setCliente(initialData.cliente);
+      if (initialData.origen) setOrigen(initialData.origen);
+      if (initialData.destino) setDestino(initialData.destino);
+      if (initialData.ingresoFlete) setIngresoFlete(initialData.ingresoFlete.toString());
+      if (initialData.observaciones) setObservaciones(initialData.observaciones);
+    }
+  }, [isOpen, initialData]);
 
   if (!isOpen) return null;
 

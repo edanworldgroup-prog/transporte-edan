@@ -11,7 +11,8 @@ import {
   Building2,
   LogOut,
   Crown,
-  ChevronDown
+  ChevronDown,
+  Calculator
 } from 'lucide-react';
 import { Empresa } from '@/types/database';
 
@@ -20,6 +21,7 @@ interface HeaderProps {
   onOpenVehicleModal: () => void;
   onOpenTripModal?: () => void;
   onOpenFleetModal?: () => void;
+  onOpenCalculator?: () => void;
   empresaNombre?: string;
   userEmail?: string;
   userRol?: 'superadmin' | 'admin_empresa' | 'operador';
@@ -35,6 +37,7 @@ export const Header: React.FC<HeaderProps> = ({
   onOpenVehicleModal,
   onOpenTripModal,
   onOpenFleetModal,
+  onOpenCalculator,
   empresaNombre = 'Transporte Edan',
   userEmail,
   userRol,
@@ -115,6 +118,18 @@ export const Header: React.FC<HeaderProps> = ({
                     {empresas.length}
                   </span>
                 )}
+              </button>
+            )}
+
+            {/* Calculator Shortcut */}
+            {onOpenCalculator && (
+              <button
+                onClick={onOpenCalculator}
+                className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-bold text-amber-400 bg-amber-500/10 hover:bg-amber-500/20 border border-amber-500/30 rounded-lg transition-colors shadow-sm"
+                title="Calculadora y Cotizador de Fletes NPR"
+              >
+                <Calculator className="w-3.5 h-3.5 text-amber-400" />
+                <span className="hidden sm:inline">Calculadora NPR</span>
               </button>
             )}
 
